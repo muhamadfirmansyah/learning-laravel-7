@@ -31,7 +31,7 @@
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>{{ $barang->name }}</td>
-                                    <td>{{ $barang->category->name }}</td>
+                                    <td>{{ $barang->category->name ?? '-' }}</td>
                                     <td>
                                         <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" class="d-inline">
                                             @csrf

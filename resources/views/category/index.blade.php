@@ -16,6 +16,7 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Name</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -25,10 +26,30 @@
                                         <td>
                                             <a href="#" data-toggle="modal" data-id="{{ $category->id }}" data-target="#detail">{{ $category->name }}</a>
                                         </td>
+                                        <td>
+                                            @if (!$category->deleted_at)
+                                            <form action="{{ route('kategori.destroy', $category->id) }}" class="d-inline" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-sm btn-danger">Delete</button>
+                                            </form>
+                                            @else
+                                            <form action="{{ route('kategori.restore', $category->id) }}" method="post" class="d-inline">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="btn btn-warning btn-sm">Restore</button>
+                                            </form>
+                                            <form action="{{ route('kategori.forceDelete', $category->id) }}" method="post" class="d-inline">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="btn btn-light btn-sm">Delete Permanentely</button>
+                                            </form>
+                                            @endif
+                                        </td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="2">Tidak ada data</td>
+                                        <td colspan="3">Tidak ada data</td>
                                     </tr>
                                     @endforelse
                                 </tbody>
@@ -93,20 +114,21 @@
 @push('script')
 <script>
     $('#detail').on('show.bs.modal', (e) => {
+        const url = "{{ url('kategori') }}/" + $(e.relatedTarget).data('id');
 
         $.ajax({
             type: "GET",
-            url: "{{ url('kategori') }}/" + $(e.relatedTarget).data('id'),
+            url: url,
             dataType: "JSON",
             success: function (response) {
                 $(e.currentTarget).find('#detailName').text(response.name);
-
                 var html = ``;
                 response.barangs.forEach((val, ind) => {
                     html += `<li>${val.name}</li>`;
                 });
                 $(e.currentTarget).find('ul').html(html);
-            }
+                $(e.currentTarget).find('form').attr('action', url);
+            },
         });
 
     });

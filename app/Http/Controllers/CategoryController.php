@@ -14,7 +14,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-	$categories = Category::all();
+	$categories = Category::withTrashed()->get();
 	return view('category.index', compact('categories'));
     }
 
@@ -85,8 +85,24 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($category)
     {
-        //
+        Category::find($category)->delete();
+
+        return redirect()->back();
+    }
+
+    public function restore($category)
+    {
+        Category::withTrashed()->restore($category);
+
+        return redirect()->back();
+    }
+
+    public function forceDelete($category)
+    {
+        Category::withTrashed()->find($category)->forceDelete();
+
+        return redirect()->back();
     }
 }

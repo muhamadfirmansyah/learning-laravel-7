@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Barang;
 use App\Category;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class BarangController extends Controller
 {
@@ -40,13 +41,13 @@ class BarangController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-		'category_id' => 'required',
-		'name' => 'required'
-	]);
+            'category_id' => 'required',
+            'name' => 'required'
+        ]);
 
-	$barang = Barang::create($request->all());
-
-	return redirect()->route('barang.index')->with('message', 'Berhasil!');
+        $barang = Barang::create($request->all());
+        
+        return redirect()->route('barang.index')->with(['message' => 'Berhasil Menambah Data!', 'type' => 'success', 'title' => 'Berhasil']);
     }
 
     /**
