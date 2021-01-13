@@ -26,5 +26,5 @@ Route::patch('kategori/{kategori}/restore', 'CategoryController@restore')->name(
 Route::resource('kategori', 'CategoryController');
 
 Route::get('/contoh', function () {
-    return view('admin.index')->with('tes', 'ini merupakan tes');
+    return view('admin.index')->with('tes', 'ini merupakan tes 2');
 });
