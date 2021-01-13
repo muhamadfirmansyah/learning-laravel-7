@@ -24,3 +24,7 @@ Route::resource('barang', 'BarangController');
 Route::patch('kategori/{kategori}/forceDelete', 'CategoryController@forceDelete')->name('kategori.forceDelete');
 Route::patch('kategori/{kategori}/restore', 'CategoryController@restore')->name('kategori.restore');
 Route::resource('kategori', 'CategoryController');
+
+Route::get('/contoh', function () {
+    return view('admin.index');
+});
