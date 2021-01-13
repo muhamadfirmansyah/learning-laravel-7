@@ -17,7 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
+Route::delete('barang/{barang}/forceDelete', 'BarangController@forceDelete')->name('barang.forceDelete');
+Route::patch('barang/{barang}/restore', 'BarangController@restore')->name('barang.restore');
 Route::resource('barang', 'BarangController');
 
 Route::patch('kategori/{kategori}/forceDelete', 'CategoryController@forceDelete')->name('kategori.forceDelete');

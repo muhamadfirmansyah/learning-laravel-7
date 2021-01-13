@@ -104,7 +104,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
                 </div>
             </div>
         </div>
@@ -120,12 +119,21 @@
             type: "GET",
             url: url,
             dataType: "JSON",
+            beforeSend: function () {
+                $(e.currentTarget).find('#detailName').text('Loading ...');
+                $(e.currentTarget).find('ul').html('<li>Loading ...</li>');
+            },
             success: function (response) {
                 $(e.currentTarget).find('#detailName').text(response.name);
                 var html = ``;
                 response.barangs.forEach((val, ind) => {
                     html += `<li>${val.name}</li>`;
                 });
+                
+                if (response.barangs.length < 1) {
+                    html = `<li class="list-unstyled alert alert-light">Tidak ada data</li>`;
+                }
+
                 $(e.currentTarget).find('ul').html(html);
                 $(e.currentTarget).find('form').attr('action', url);
             },

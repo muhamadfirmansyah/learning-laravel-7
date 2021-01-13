@@ -9,8 +9,12 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="m-0">Barang</h4>
+                        <h4 class="m-0">Barang - {{ request()->trash === 'true' ? 'Sampah' : 'Semua' }}</h4>
                         <div>
+                            <form class="d-inline">
+                                <input type="hidden" name="trash" value="{{ request()->trash === 'true' ? 'false' : 'true' }}">
+                                <button class="btn btn-secondary btn-sm">Tampilkan {{ request()->trash === 'true' ? 'Semua' : 'Sampah' }}</button>
+                            </form>
                             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modelId">Tambah</button>
                         </div>
                     </div>
@@ -33,12 +37,25 @@
                                     <td>{{ $barang->name }}</td>
                                     <td>{{ $barang->category->name ?? '-' }}</td>
                                     <td>
+                                        @if (!$barang->deleted_at)
                                         <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                         </form>
                                         <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#edit" data-id="{{ $barang->id }}" data-url="{{ route('barang.show', $barang->id) }}">Edit</button>
+                                        @else
+                                        <form action="{{ route('barang.restore', $barang->id) }}" class="d-inline" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button class="btn btn-warning btn-sm" type="submit">Restore</button>
+                                        </form>
+                                        <form action="{{ route('barang.forceDelete', $barang->id) }}" class="d-inline" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-light btn-sm" type="submit">Delete Permanently</button>
+                                        </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty

@@ -16,7 +16,12 @@ class BarangController extends Controller
      */
     public function index()
     {
-        $barangs = Barang::all();
+        if (request()->trash === 'true') {
+            $barangs = Barang::onlyTrashed()->get();
+        } else {
+            $barangs = Barang::all();
+        }
+
         $categories = Category::all();
         return view('barang.index', compact('barangs', 'categories'));
     }
@@ -101,6 +106,20 @@ class BarangController extends Controller
     {
         $barang->delete();
 
-	return redirect()->back();
+	return redirect()->back()->with(['message' => 'Berhasil Dihapus!', 'type' => 'success', 'title' => 'Berhasil']);;
+    }
+
+    public function restore($barang)
+    {
+        Barang::withTrashed()->find($barang)->restore();
+
+        return redirect()->back()->with(['message' => 'Berhasil Di-restore!', 'type' => 'success', 'title' => 'Berhasil']);
+    }
+
+    public function forceDelete($barang)
+    {
+        Barang::withTrashed()->find($barang)->forceDelete();
+
+        return redirect()->back()->with(['message' => 'Berhasil Dihapus permanen!', 'type' => 'success', 'title' => 'Berhasil']);
     }
 }
