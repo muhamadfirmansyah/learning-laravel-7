@@ -1,6 +1,9 @@
 <?php
 
+use App\Exports\StudentsExport;
+use App\Student;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,4 +30,31 @@ Route::resource('kategori', 'CategoryController');
 
 Route::get('/contoh', function () {
     return view('admin.index')->with('tes', 'ini merupakan tes 2');
+});
+
+Route::get('/students', function() {
+    // $students = Student::get(['nis', 'nama', 'id_kelas', 'password']);
+
+    return view('students.index');
+});
+
+Route::get('/api/students', function() {
+    // $students = Student::orderBy('id', 'DESC')->get(['id', 'nama', 'id_kelas', 'password']);
+$students = Student::count();
+
+    return response()->json($students);
+});
+
+Route::get('/students/export', function() {
+    $type = request()->type;
+
+    if ($type == 'xlsx') {
+        return Excel::download(new StudentsExport, 'students.xlsx');
+    } elseif ($type == 'csv') {
+        return Excel::download(new StudentsExport, 'students.csv', 'Csv', [
+            'content-type' => 'text/csv'
+        ]);
+    }
+
+    return "Silahkan masukkan request type-nya";
 });
